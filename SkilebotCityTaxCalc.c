@@ -1,4 +1,4 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,11 +9,11 @@ double alphatofloat(const char* cast_str);
 int price_input(char* str) {
     int price = 0;
     int errnum = 0;
-    printf("%s ÁÖ°¡ ÀÔ·Â : ", str);
+    printf("%s ì£¼ê°€ ì…ë ¥ : ", str);
     errnum = scanf("%d", &price);
     while (price <= 0 || errnum != 1) {
-        printf("ÁÖ°¡´Â ÀÚ¿¬¼ö¿©¾ß ÇÕ´Ï´Ù.\n");
-        printf("%s ÁÖ°¡ ÀçÀÔ·Â : ", str);
+        printf("ì£¼ê°€ëŠ” ìì—°ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.\n");
+        printf("%s ì£¼ê°€ ì¬ì…ë ¥ : ", str);
         errnum = 0;
         while (getchar() != '\n');
         errnum = scanf("%d", &price);
@@ -21,8 +21,8 @@ int price_input(char* str) {
     while (getchar() != '\n');
     return price;
 }
-/** commandInput - ¹®ÀÚ¸¦ ÀÔ·Â¹ŞÀ» ÇÔ¼ö.
- * @return ch - ÀÔ·Â¹ŞÀº ¹®ÀÚ.
+/** commandInput - ë¬¸ìë¥¼ ì…ë ¥ë°›ì„ í•¨ìˆ˜.
+ * @return ch - ì…ë ¥ë°›ì€ ë¬¸ì.
  */
 char commandInput() {
     char ch = 0;
@@ -38,7 +38,7 @@ char commandInput() {
     }
     if (!i) command = ch;
     if (i > 1 || !flag) {
-        printf("Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù. \n");
+        printf("ì˜ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤. \n");
         return commandInput();
     }
     return tolower(command);
@@ -52,34 +52,34 @@ int check_buildings(char* str, int size) {
         if (c < 97 || (c > 109 && c != 120)) return 0;
 
         else if (c == 106 && (i != 0 && i != 6)) {
-            printf("Ç×±¸´Â ¸Ç ³¡ Ä­¿¡ ¹èÄ¡ÇÏ¼¼¿ä. \n");
+            printf("í•­êµ¬ëŠ” ë§¨ ë ì¹¸ì— ë°°ì¹˜í•˜ì„¸ìš”. \n");
             return 0;
         }
     }
     return 1;
 }
 
-/** buildingInput - ºôµùÀÇ ¹è¿­À» ÀÔ·Â¹ŞÀ» ÇÔ¼ö
- * @param str - ¹®ÀÚ¿­ ÀÔ·Â½Ã Àü´Ş¹ŞÀ» charÇü ¹è¿­ ÁÖ¼Ò
- * @param size - strÀÇ size
+/** buildingInput - ë¹Œë”©ì˜ ë°°ì—´ì„ ì…ë ¥ë°›ì„ í•¨ìˆ˜
+ * @param str - ë¬¸ìì—´ ì…ë ¥ì‹œ ì „ë‹¬ë°›ì„ charí˜• ë°°ì—´ ì£¼ì†Œ
+ * @param size - strì˜ size
  */
 int buildingInput(char* str, int size) {
     char ch = 0;
     int i = 0, overcount=0;
     if (str == NULL) return -1;
-    while ((i < size - 1) && ((ch = getchar()) != '\n')) {  // 7ÀÚ¸® ¿Ï·á ¶Ç´Â ±× Àü¿¡ ÀÔ·ÂÀÌ ³¡³­ °æ¿ì Á¾·á.
+    while ((i < size - 1) && ((ch = getchar()) != '\n')) {  // 7ìë¦¬ ì™„ë£Œ ë˜ëŠ” ê·¸ ì „ì— ì…ë ¥ì´ ëë‚œ ê²½ìš° ì¢…ë£Œ.
         if (isalpha(ch)) {
             str[i] = tolower(ch);
         }
         else {
-            while (getchar() != '\n'); // ¹öÆÛ ºñ¿ì±â
+            while (getchar() != '\n'); // ë²„í¼ ë¹„ìš°ê¸°
             return 0;
         }
         i++;
     }
     if (i < size - 1) return 0;
     while ((ch = getchar()) != '\n') {  // If i==size-1, then getchar() == \n. in condition of short circuit evaluation
-        overcount++;        // 7ÀÚ¸®¸¦ ³Ñ¾î¼­ ÀÔ·ÂÇÑ °æ¿ì
+        overcount++;        // 7ìë¦¬ë¥¼ ë„˜ì–´ì„œ ì…ë ¥í•œ ê²½ìš°
     }
     if (overcount > 0) return 0;
     str[i] = '\0';
@@ -97,7 +97,7 @@ void applyEffect(float* multiples, char* buildings) {
 
     for (int address = 0; address < strlen(buildings); address++) {
         char building = buildings[address];
-        char* b_idx = strchr(b_arr, building);   // bÀÇ ÁÖ¼Ò¸¦ ¹İÈ¯, ¾øÀ¸¸é 0.
+        char* b_idx = strchr(b_arr, building);   // bì˜ ì£¼ì†Œë¥¼ ë°˜í™˜, ì—†ìœ¼ë©´ 0.
         int type_num = b_idx - b_arr;
         char* effect = effects[type_num];
 
@@ -108,7 +108,7 @@ void applyEffect(float* multiples, char* buildings) {
         {
             int num_ef = alphatoint(effect[0]);
             int k, i = 2;
-            for (int j = 0; j < num_ef; j++) {      // È¿°ú °³¼ö¸¸Å­ ¹İº¹
+            for (int j = 0; j < num_ef; j++) {      // íš¨ê³¼ ê°œìˆ˜ë§Œí¼ ë°˜ë³µ
                 unsigned char first_efbuild = 0;        // b0 0 0 0  0 0 0 0 
                 unsigned char second_efbuild = 0;
                 int place = alphatoint(effect[i]);  // i==1
@@ -143,17 +143,17 @@ void applyEffect(float* multiples, char* buildings) {
                     }
                 }
                 k++;
-                float coefficient = atof(&effect[k]);  // # ÀÌÈÄ '\0'±îÁö ½Ç¼ö·Î º¯È¯
-                i = k + strlen(&effect[k]) + 2;       // # ÀÌÈÄ ´ÙÀ½ effect·Î ÀÌµ¿
+                double coefficient = atof(&effect[k]);  // # ì´í›„ '\0'ê¹Œì§€ ì‹¤ìˆ˜ë¡œ ë³€í™˜
+                i = k + strlen(&effect[k]) + 2;       // # ì´í›„ ë‹¤ìŒ effectë¡œ ì´ë™
 
                 if (first_efbuild < 1 && second_efbuild < 1) {
                     continue;
                 }
-                for (int address1 = 0; address1 < strlen(buildings); address1++) {  // °¢ È¿°ú¸¦ buildings ¹®ÀÚ¿­À» Å½»öÇÏ¿© multiples¿¡ Àû¿ë
+                for (int address1 = 0; address1 < strlen(buildings); address1++) {  // ê° íš¨ê³¼ë¥¼ buildings ë¬¸ìì—´ì„ íƒìƒ‰í•˜ì—¬ multiplesì— ì ìš©
                     if (address1 == address) continue;
 
                     if (place == 0 || abs(address1 - address) <= place) { 
-                        char* neighbor = strchr(b_arr, buildings[address1]);   // bÀÇ ÁÖ¼Ò¸¦ ¹İÈ¯, ¾øÀ¸¸é 0.
+                        char* neighbor = strchr(b_arr, buildings[address1]);   // bì˜ ì£¼ì†Œë¥¼ ë°˜í™˜, ì—†ìœ¼ë©´ 0.
                         int neighbor_type = neighbor - b_arr;
                         if (neighbor_type < 8 && (first_efbuild & 1 << neighbor_type)) {
                             multiples[address1] *= coefficient;
@@ -167,30 +167,30 @@ void applyEffect(float* multiples, char* buildings) {
 
         }
     }
-    printf("multiples: [ ");
+    printf("multiples: ");
     for (int i = 0; i < 7; i++) {
-        printf("%.3f, ", multiples[i]);
+        printf("%f, ", multiples[i]);
     }
-    printf("]\n");
-    /*{('°øÅÍ', 1, (1, 0, 0.5)),
-        ('ÁÖÅÃ', 0), ('ÆíÀÇÁ¡', 2, (2, 2, 1, 3, 4), (3, 1, 2, 0.7)), ('ÇĞ±³', 2, (4, 1, 1, 3), (2, 1, 8, 0.5)),
-        ('È¸»ç', 1, (3, 10, 1, 2, 5, 6, 7, 8, 10, 11, 12, 13, 2)), ('º´¿ø', 1, (0, 0, 1.5)),
-        ('ÀºÇà', 1, (1, 1, 5, 5)),
-        ('¹éÈ­Á¡', 2, (1, 0, 3, 5), (0, 1, 2, 0)),
-        ('È£ÅÚ', 2, (0, 9, 2, 4, 5, 6, 7, 10, 11, 12, 13, 2), (0, 1, 1, 0.5)),
-        ('Ä«Áö³ë', 3, (2, 1, 1, 0.5), (0, 1, 9, 0.5), (1, 1, 8, 2)), ('Ç×±¸', 1, (0, 3, 8, 9, 10, 3)),
-        ('°æ±âÀå', 1, (2, 0, 0.2)), ('±³È¸', 1, [2, 2, 1, 4, 1.5]), ('°øÀå', 1, (3, 0, 0)))*/
-        // ('°Ç¹°ÀÌ¸§', È¿°ú °³¼ö, (place, °Ç¹°Á¾·ù°³¼ö, Á¾·ù,.. , È¿°ú)..)
-        // È¿°ú °³¼ö == 0, nothing
-        // place == 0, Àü¹üÀ§,
-        // °Ç¹°Á¾·ù°³¼ö == 0, ¸ğµç °Ç¹°, Á¾·ùX
+    printf("\n");
+    /*{('ê³µí„°', 1, (1, 0, 0.5)),
+        ('ì£¼íƒ', 0), ('í¸ì˜ì ', 2, (2, 2, 1, 3, 4), (3, 1, 2, 0.7)), ('í•™êµ', 2, (4, 1, 1, 3), (2, 1, 8, 0.5)),
+        ('íšŒì‚¬', 1, (3, 10, 1, 2, 5, 6, 7, 8, 10, 11, 12, 13, 2)), ('ë³‘ì›', 1, (0, 0, 1.5)),
+        ('ì€í–‰', 1, (1, 1, 5, 5)),
+        ('ë°±í™”ì ', 2, (1, 0, 3, 5), (0, 1, 2, 0)),
+        ('í˜¸í…”', 2, (0, 9, 2, 4, 5, 6, 7, 10, 11, 12, 13, 2), (0, 1, 1, 0.5)),
+        ('ì¹´ì§€ë…¸', 3, (2, 1, 1, 0.5), (0, 1, 9, 0.5), (1, 1, 8, 2)), ('í•­êµ¬', 1, (0, 3, 8, 9, 10, 3)),
+        ('ê²½ê¸°ì¥', 1, (2, 0, 0.2)), ('êµíšŒ', 1, [2, 2, 1, 4, 1.5]), ('ê³µì¥', 1, (3, 0, 0)))*/
+        // ('ê±´ë¬¼ì´ë¦„', íš¨ê³¼ ê°œìˆ˜, (place, ê±´ë¬¼ì¢…ë¥˜ê°œìˆ˜, ì¢…ë¥˜,.. , íš¨ê³¼)..)
+        // íš¨ê³¼ ê°œìˆ˜ == 0, nothing
+        // place == 0, ì „ë²”ìœ„,
+        // ê±´ë¬¼ì¢…ë¥˜ê°œìˆ˜ == 0, ëª¨ë“  ê±´ë¬¼, ì¢…ë¥˜X
 }
 
 void calculateTax(char* buildings, float* multiples) {
     char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL };
     int building_tax[] = { 0, 1, 2, 4, 6, 10, 20, 25, 30, 50, 15, 15, 0, 0 };
     for (int address = 0; address < strlen(buildings); address++) {  
-        char* neighbor = strchr(b_arr, buildings[address]);   // bÀÇ ÁÖ¼Ò¸¦ ¹İÈ¯, ¾øÀ¸¸é 0.
+        char* neighbor = strchr(b_arr, buildings[address]);   // bì˜ ì£¼ì†Œë¥¼ ë°˜í™˜, ì—†ìœ¼ë©´ 0.
         int neighbor_type = neighbor - b_arr;
         multiples[address] *= building_tax[neighbor_type];
     }
@@ -207,18 +207,18 @@ int sumTaxes(char* buildings, float* multiples, int green, int lus) {
 
 void loop() {
     int green = 0, lus = 0;
-    int weekend = 0;    //±âº»°ªÀº ÆòÀÏ, 1-Åä¿äÀÏ, 2-ÀÏ¿äÀÏ
+    int weekend = 0;    //ê¸°ë³¸ê°’ì€ í‰ì¼, 1-í† ìš”ì¼, 2-ì¼ìš”ì¼
     char ch;
-    green = price_input("±×¸°°Ç¼³");
-    lus = price_input("·¯½º°ü±¤");
+    green = price_input("ê·¸ë¦°ê±´ì„¤");
+    lus = price_input("ëŸ¬ìŠ¤ê´€ê´‘");
 
-    printf("»êÃâÀÏÀÌ ÁÖ¸»ÀÎÁö ÀÔ·ÂÇÏ¼¼¿ä.(y/N) ");
+    printf("ì‚°ì¶œì¼ì´ ì£¼ë§ì¸ì§€ ì…ë ¥í•˜ì„¸ìš”.(y/N) ");
     ch = commandInput();
     while (ch != 'y' && ch != 'n' && ch != '\n') {
         ch = commandInput();
     }
     if (ch == 'y') {
-        printf("ÀÏ¿äÀÏÀÌ¸é y, Åä¿äÀÏÀÌ¸é nÀ» ÀÔ·ÂÇÏ¼¼¿ä.(y/N) ");
+        printf("ì¼ìš”ì¼ì´ë©´ y, í† ìš”ì¼ì´ë©´ nì„ ì…ë ¥í•˜ì„¸ìš”.(y/N) ");
         ch = commandInput();
         while (ch != 'y' && ch != 'n' && ch != '\n') {
             ch = commandInput();
@@ -226,16 +226,16 @@ void loop() {
         if (ch == 'y') weekend = 2;
         else weekend = 1;
     }
-    printf("°øÅÍ=x, ÁÖÅÃ=a, ÆíÀÇÁ¡=b, ÇĞ±³=c, È¸»ç=d\n");
-    printf("º´¿ø=e, ÀºÇà=f, ¹éÈ­Á¡-g, È£ÅÚ=h, Ä«Áö³ë=i\n");
-    printf("Ç×±¸=j, °æ±âÀå=k, ±³È¸=l, °øÀå=m\n");
-    printf("¹è¿­ÇÒ °Ç¹°À» ¶ç¾î¾²±â ¾øÀÌ 7ÀÚ¸® ÀûÀ¸¼¼¿ä: ");
+    printf("ê³µí„°=x, ì£¼íƒ=a, í¸ì˜ì =b, í•™êµ=c, íšŒì‚¬=d\n");
+    printf("ë³‘ì›=e, ì€í–‰=f, ë°±í™”ì -g, í˜¸í…”=h, ì¹´ì§€ë…¸=i\n");
+    printf("í•­êµ¬=j, ê²½ê¸°ì¥=k, êµíšŒ=l, ê³µì¥=m\n");
+    printf("ë°°ì—´í•  ê±´ë¬¼ì„ ë„ì–´ì“°ê¸° ì—†ì´ 7ìë¦¬ ì ìœ¼ì„¸ìš”: ");
 
     char buildings[8];
     ch = buildingInput(buildings, sizeof(buildings)/sizeof(char));
     while (!ch) {
-        printf("Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù.\n");
-        printf("¹è¿­ÇÒ °Ç¹°À» ¶ç¾î¾²±â ¾øÀÌ 7ÀÚ¸® ÀûÀ¸¼¼¿ä: ");
+        printf("ì˜ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤.\n");
+        printf("ë°°ì—´í•  ê±´ë¬¼ì„ ë„ì–´ì“°ê¸° ì—†ì´ 7ìë¦¬ ì ìœ¼ì„¸ìš”: ");
         ch = buildingInput(buildings, sizeof(buildings) / sizeof(char));
     }
 
@@ -246,23 +246,21 @@ void loop() {
 
     int result = sumTaxes(buildings, multiples, green, lus);
 
-    printf("±×¸°: %d, ·¯½º: %d\n", green, lus);
+    printf("ê·¸ë¦°: %d, ëŸ¬ìŠ¤: %d\n", green, lus);
     printf("weekend: %d\n", weekend);
     printf("buildings: %s\n", buildings);
-    printf("multiples*unit: [ ");
+    printf("multiples*unit: ");
     for (int i = 0; i < 7; i++) {
-        printf("%.3f, ", multiples[i]);
+        printf("%f, ", multiples[i]);
     }
-    printf("]\n");
+    printf("\n");
     printf(" RESULT = %d\n", result);
 
 }
 int main() {
-    printf("½ÁÄ®º¿ µµ½ÃÀÇ Áı¼¼ °è»ê ÇÁ·Î±×·¥ÀÔ´Ï´Ù.\n");
-    //printf("ÇÁ·Î±×·¥À» Á¾·áÇÏ½Ã·Á¸é q¸¦ ¸®¼ÂÇÏ·Á¸é rÀ» ÀÔ·ÂÇÏ¼¼¿ä.\n");
+    printf("ìŠ·ì¹¼ë´‡ ë„ì‹œì˜ ì§‘ì„¸ ê³„ì‚° í”„ë¡œê·¸ë¨ì…ë‹ˆë‹¤.\n");
+    //printf("í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•˜ì‹œë ¤ë©´ që¥¼ ë¦¬ì…‹í•˜ë ¤ë©´ rì„ ì…ë ¥í•˜ì„¸ìš”.\n");
     loop();
-    printf("Á¾·áÇÏ·Á¸é ¾Æ¹«Å°³ª ÀÔ·ÂÇÏ¼¼¿ä. ");
-    getchar();
     return 0;
 }
 
