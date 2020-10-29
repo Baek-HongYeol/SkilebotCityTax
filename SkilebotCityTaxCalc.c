@@ -167,6 +167,11 @@ void applyEffect(float* multiples, char* buildings) {
 
         }
     }
+    printf("multiples: ");
+    for (int i = 0; i < 7; i++) {
+        printf("%f, ", multiples[i]);
+    }
+    printf("\n");
     /*{('공터', 1, (1, 0, 0.5)),
         ('주택', 0), ('편의점', 2, (2, 2, 1, 3, 4), (3, 1, 2, 0.7)), ('학교', 2, (4, 1, 1, 3), (2, 1, 8, 0.5)),
         ('회사', 1, (3, 10, 1, 2, 5, 6, 7, 8, 10, 11, 12, 13, 2)), ('병원', 1, (0, 0, 1.5)),
@@ -189,6 +194,15 @@ void calculateTax(char* buildings, float* multiples) {
         int neighbor_type = neighbor - b_arr;
         multiples[address] *= building_tax[neighbor_type];
     }
+}
+
+int sumTaxes(char* buildings, float* multiples, int green, int lus) {
+    float sum = 0;
+    for (int i = 0; i < 7; i++) {
+        if (buildings[i] == 'i') sum += multiples[i] * lus;
+        else sum += multiples[i] * green;
+    }
+    return (int)sum;
 }
 
 void loop() {
@@ -230,16 +244,17 @@ void loop() {
     applyEffect(multiples, buildings);
     calculateTax(buildings, multiples);
 
+    int result = sumTaxes(buildings, multiples, green, lus);
+
     printf("그린: %d, 러스: %d\n", green, lus);
     printf("weekend: %d\n", weekend);
     printf("buildings: %s\n", buildings);
-    printf("multiples: ");
+    printf("multiples*unit: ");
     for (int i = 0; i < 7; i++) {
         printf("%f, ", multiples[i]);
     }
     printf("\n");
-
-    printf(" RESULT = %d", result);
+    printf(" RESULT = %d\n", result);
 
 }
 int main() {
