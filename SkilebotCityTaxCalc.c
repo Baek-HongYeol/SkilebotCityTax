@@ -1,4 +1,4 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,11 +6,11 @@
 int price_input(char* str) {
     int price = 0;
     int errnum = 0;
-    printf("%s ÁÖ°¡ ÀÔ·Â : ", str);
+    printf("%s ì£¼ê°€ ì…ë ¥ : ", str);
     errnum = scanf("%d", &price);
     while (price <= 0 || errnum != 1) {
-        printf("ÁÖ°¡´Â ÀÚ¿¬¼ö¿©¾ß ÇÕ´Ï´Ù.\n");
-        printf("%s ÁÖ°¡ ÀçÀÔ·Â : ", str);
+        printf("ì£¼ê°€ëŠ” ìì—°ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.\n");
+        printf("%s ì£¼ê°€ ì¬ì…ë ¥ : ", str);
         errnum = 0;
         while (getchar() != '\n');
         errnum = scanf("%d", &price);
@@ -18,8 +18,8 @@ int price_input(char* str) {
     while (getchar() != '\n');
     return price;
 }
-/** commandInput - ¹®ÀÚ¸¦ ÀÔ·Â¹ŞÀ» ÇÔ¼ö.
- * @return ch - ÀÔ·Â¹ŞÀº ¹®ÀÚ.
+/** commandInput - ë¬¸ìë¥¼ ì…ë ¥ë°›ì„ í•¨ìˆ˜.
+ * @return ch - ì…ë ¥ë°›ì€ ë¬¸ì.
  */
 char commandInput() {
     char ch = 0;
@@ -35,7 +35,7 @@ char commandInput() {
     }
     if (!i) command = ch;
     if (i > 1 || !flag) {
-        printf("Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù. \n");
+        printf("ì˜ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤. \n");
         return commandInput();
     }
     return tolower(command);
@@ -49,34 +49,34 @@ int check_buildings(char* str, int size) {
         if (c < 97 || (c > 109 && c != 120)) return 0;
 
         else if (c == 106 && (i != 0 && i != 6)) {
-            printf("Ç×±¸´Â ¸Ç ³¡ Ä­¿¡ ¹èÄ¡ÇÏ¼¼¿ä. \n");
+            printf("í•­êµ¬ëŠ” ë§¨ ë ì¹¸ì— ë°°ì¹˜í•˜ì„¸ìš”. \n");
             return 0;
         }
     }
     return 1;
 }
 
-/** buildingInput - ºôµùÀÇ ¹è¿­À» ÀÔ·Â¹ŞÀ» ÇÔ¼ö
- * @param str - ¹®ÀÚ¿­ ÀÔ·Â½Ã Àü´Ş¹ŞÀ» char*Çü ¹è¿­
- * @param size - strÀÇ size
+/** buildingInput - ë¹Œë”©ì˜ ë°°ì—´ì„ ì…ë ¥ë°›ì„ í•¨ìˆ˜
+ * @param str - ë¬¸ìì—´ ì…ë ¥ì‹œ ì „ë‹¬ë°›ì„ charí˜• ë°°ì—´ ì£¼ì†Œ
+ * @param size - strì˜ size
  */
 int buildingInput(char* str, int size) {
     char ch = 0;
     int i = 0, overcount=0;
     if (str == NULL) return -1;
-    while ((i < size - 1) && ((ch = getchar()) != '\n')) {  // 7ÀÚ¸® ¿Ï·á ¶Ç´Â ±× Àü¿¡ ÀÔ·ÂÀÌ ³¡³­ °æ¿ì Á¾·á.
+    while ((i < size - 1) && ((ch = getchar()) != '\n')) {  // 7ìë¦¬ ì™„ë£Œ ë˜ëŠ” ê·¸ ì „ì— ì…ë ¥ì´ ëë‚œ ê²½ìš° ì¢…ë£Œ.
         if (isalpha(ch)) {
             str[i] = tolower(ch);
         }
         else {
-            while (getchar() != '\n'); // ¹öÆÛ ºñ¿ì±â
+            while (getchar() != '\n'); // ë²„í¼ ë¹„ìš°ê¸°
             return 0;
         }
         i++;
     }
     if (i < size - 1) return 0;
     while ((ch = getchar()) != '\n') {  // If i==7, then getchar() == \n
-        overcount++;        // 7ÀÚ¸®¸¦ ³Ñ¾î¼­ ÀÔ·ÂÇÑ °æ¿ì
+        overcount++;        // 7ìë¦¬ë¥¼ ë„˜ì–´ì„œ ì…ë ¥í•œ ê²½ìš°
     }
     if (overcount > 0) return 0;
     str[i] = '\0';
@@ -127,18 +127,18 @@ double alphatofloat(const char* cast_str) {
 
 void loop() {
     int green = 0, lus = 0;
-    int weekend = 0;    //±âº»°ªÀº ÆòÀÏ, 1-Åä¿äÀÏ, 2-ÀÏ¿äÀÏ
+    int weekend = 0;    //ê¸°ë³¸ê°’ì€ í‰ì¼, 1-í† ìš”ì¼, 2-ì¼ìš”ì¼
     char ch;
-    green = price_input("±×¸°°Ç¼³");
-    lus = price_input("·¯½º°ü±¤");
+    green = price_input("ê·¸ë¦°ê±´ì„¤");
+    lus = price_input("ëŸ¬ìŠ¤ê´€ê´‘");
 
-    printf("»êÃâÀÏÀÌ ÁÖ¸»ÀÎÁö ÀÔ·ÂÇÏ¼¼¿ä.(y/N) ");
+    printf("ì‚°ì¶œì¼ì´ ì£¼ë§ì¸ì§€ ì…ë ¥í•˜ì„¸ìš”.(y/N) ");
     ch = commandInput();
     while (ch != 'y' && ch != 'n' && ch != '\n') {
         ch = commandInput();
     }
     if (ch == 'y') {
-        printf("ÀÏ¿äÀÏÀÌ¸é y, Åä¿äÀÏÀÌ¸é nÀ» ÀÔ·ÂÇÏ¼¼¿ä.(y/N) ");
+        printf("ì¼ìš”ì¼ì´ë©´ y, í† ìš”ì¼ì´ë©´ nì„ ì…ë ¥í•˜ì„¸ìš”.(y/N) ");
         ch = commandInput();
         while (ch != 'y' && ch != 'n' && ch != '\n') {
             ch = commandInput();
@@ -146,92 +146,93 @@ void loop() {
         if (ch == 'y') weekend = 2;
         else weekend = 1;
     }
-    printf("°øÅÍ=x, ÁÖÅÃ=a, ÆíÀÇÁ¡=b, ÇĞ±³=c, È¸»ç=d\n");
-    printf("º´¿ø=e, ÀºÇà=f, ¹éÈ­Á¡-g, È£ÅÚ=h, Ä«Áö³ë=i\n");
-    printf("Ç×±¸=j, °æ±âÀå=k, ±³È¸=l, °øÀå=m\n");
-    printf("¹è¿­ÇÒ °Ç¹°À» ¶ç¾î¾²±â ¾øÀÌ 7ÀÚ¸® ÀûÀ¸¼¼¿ä: ");
+    printf("ê³µí„°=x, ì£¼íƒ=a, í¸ì˜ì =b, í•™êµ=c, íšŒì‚¬=d\n");
+    printf("ë³‘ì›=e, ì€í–‰=f, ë°±í™”ì -g, í˜¸í…”=h, ì¹´ì§€ë…¸=i\n");
+    printf("í•­êµ¬=j, ê²½ê¸°ì¥=k, êµíšŒ=l, ê³µì¥=m\n");
+    printf("ë°°ì—´í•  ê±´ë¬¼ì„ ë„ì–´ì“°ê¸° ì—†ì´ 7ìë¦¬ ì ìœ¼ì„¸ìš”: ");
 
     char buildings[8];
     ch = buildingInput(buildings, sizeof(buildings)/sizeof(char));
     while (!ch) {
-        printf("Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù.\n");
-        printf("¹è¿­ÇÒ °Ç¹°À» ¶ç¾î¾²±â ¾øÀÌ 7ÀÚ¸® ÀûÀ¸¼¼¿ä: ");
+        printf("ì˜ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤.\n");
+        printf("ë°°ì—´í•  ê±´ë¬¼ì„ ë„ì–´ì“°ê¸° ì—†ì´ 7ìë¦¬ ì ìœ¼ì„¸ìš”: ");
         ch = buildingInput(buildings, sizeof(buildings) / sizeof(char));
     }
 
     char b_key[14] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm' };
     int multiples[7] = { 1, 1, 1, 1, 1, 1, 1 };
-    char gontor[] = "2213_#4/312_#0.7"; //"110_#0.5";      // place, num_build, build1_, build2_, ... , #efficient
+
+    char gontor[] = "1.10#0.5";                     //"1.10#0.5\0";      
+    char convenience[] = "2.221_3_#4\0.312_#0.7";   // num_ef. ('.',  place, num_build, build1_, build2_, ... , #efficient'\0')
     {
-        unsigned char first_build = 0;        // b0 0 0 0  0 0 0 0 
-        unsigned char second_build = 0;
+        unsigned char first_efbuild = 0;        // b0 0 0 0  0 0 0 0 
+        unsigned char second_efbuild = 0;
         int num_ef = alphatoint(gontor[0]);
-        int i = 1;
+        int k, i = 2;
         for (int j = 0; j < num_ef; j++) {
             int place = alphatoint(gontor[i]);  // i==1
             i++;
-            int num_build = alphatoint(gontor[i]);  //i==2
-            if (num_build == 0) {
-                first_build = 255;
-                second_build = 63;
+            int num_build = alphatoint(gontor[i]);  // i==2
+            if (num_build == 0) {       
+                first_efbuild = 255;
+                second_efbuild = 63;
+                k = i + 1;              // move k to index of '#'. effect = ".10#0.7"
             }
-            int k = i;
-            int n = 0;
-            for (k = i + 1; gontor[k]!='#'; k++) {
-                if (gontor[k] == '_') {
-                    if (n != 0) {
-                        if (n < 8) {
-                            first_build += 1 << n;
+            else {
+                int n = 0;
+                for (k = i + 1; gontor[k] != '#'; k++) {
+                    if (gontor[k] == '_') {
+                        if (n != 0) {
+                            if (n < 8) {
+                                first_efbuild += 1 << n;
+                            }
+                            else {
+                                second_efbuild += 1 << (n - 8);
+                            }
                         }
-                        else {
-                            second_build += 1 << (n - 8);
-                        }
+                        n = 0;
+                        continue;
                     }
-                    n = 0;
-                    continue;
+                    else if (n == 0)
+                        n = alphatoint(gontor[k]);
+                    else {
+                        n *= 10;
+                        n += alphatoint(gontor[k]);
+                    }
                 }
-                else if (n == 0)
-                    n = alphatoint(gontor[k]);
-                else
-                {
-                    n *= 10;
-                    n += alphatoint(gontor[k]);
-
-                }
-                
             }
+            
             k++;
-            double efficient = atof(&gontor[k]);  // 3
-            k++;
+            double efficient = atof(&gontor[k]);  // # ì´í›„ '\0'ê¹Œì§€ ì‹¤ìˆ˜ë¡œ ë³€í™˜
             printf("place: %d\n", place);
             printf("num_build = %d\n", num_build);
             printf("efficient = %lf\n", efficient);
-            i = k + 1;
+            i = k + strlen(&gontor[k]) + 2;
         }
         
     }
-    /*{('°øÅÍ', 1, (1, 0, 0.5)),
-        ('ÁÖÅÃ', 0), ('ÆíÀÇÁ¡', 2, (2, 2, 1, 3, 4), (3, 1, 2, 0.7)), ('ÇĞ±³', 2, (4, 1, 1, 3), (2, 1, 8, 0.5)),
-        ('È¸»ç', 1, (3, 10, 1, 2, 5, 6, 7, 8, 10, 11, 12, 13, 2)), ('º´¿ø', 1, (0, 0, 1.5)),
-        ('ÀºÇà', 1, (1, 1, 5, 5)),
-        ('¹éÈ­Á¡', 2, (1, 0, 3, 5), (0, 1, 2, 0)),
-        ('È£ÅÚ', 2, (0, 9, 2, 4, 5, 6, 7, 10, 11, 12, 13, 2), (0, 1, 1, 0.5)),
-        ('Ä«Áö³ë', 3, (2, 1, 1, 0.5), (0, 1, 9, 0.5), (1, 1, 8, 2)), ('Ç×±¸', 1, (0, 3, 8, 9, 10, 3)),
-        ('°æ±âÀå', 1, (2, 0, 0.2)), ('±³È¸', 1, [2, 2, 1, 4, 1.5]), ('°øÀå', 1, (3, 0, 0)))*/
-    // ('°Ç¹°ÀÌ¸§', È¿°ú °³¼ö, (place, °Ç¹°Á¾·ù°³¼ö, Á¾·ù,.. , È¿°ú)..)
-    // È¿°ú °³¼ö == 0, nothing
-    // place == 0, Àü¹üÀ§,
-    // °Ç¹°Á¾·ù°³¼ö == 0, ¸ğµç °Ç¹°, Á¾·ùX
+    /*{('ê³µí„°', 1, (1, 0, 0.5)),
+        ('ì£¼íƒ', 0), ('í¸ì˜ì ', 2, (2, 2, 1, 3, 4), (3, 1, 2, 0.7)), ('í•™êµ', 2, (4, 1, 1, 3), (2, 1, 8, 0.5)),
+        ('íšŒì‚¬', 1, (3, 10, 1, 2, 5, 6, 7, 8, 10, 11, 12, 13, 2)), ('ë³‘ì›', 1, (0, 0, 1.5)),
+        ('ì€í–‰', 1, (1, 1, 5, 5)),
+        ('ë°±í™”ì ', 2, (1, 0, 3, 5), (0, 1, 2, 0)),
+        ('í˜¸í…”', 2, (0, 9, 2, 4, 5, 6, 7, 10, 11, 12, 13, 2), (0, 1, 1, 0.5)),
+        ('ì¹´ì§€ë…¸', 3, (2, 1, 1, 0.5), (0, 1, 9, 0.5), (1, 1, 8, 2)), ('í•­êµ¬', 1, (0, 3, 8, 9, 10, 3)),
+        ('ê²½ê¸°ì¥', 1, (2, 0, 0.2)), ('êµíšŒ', 1, [2, 2, 1, 4, 1.5]), ('ê³µì¥', 1, (3, 0, 0)))*/
+    // ('ê±´ë¬¼ì´ë¦„', íš¨ê³¼ ê°œìˆ˜, (place, ê±´ë¬¼ì¢…ë¥˜ê°œìˆ˜, ì¢…ë¥˜,.. , íš¨ê³¼)..)
+    // íš¨ê³¼ ê°œìˆ˜ == 0, nothing
+    // place == 0, ì „ë²”ìœ„,
+    // ê±´ë¬¼ì¢…ë¥˜ê°œìˆ˜ == 0, ëª¨ë“  ê±´ë¬¼, ì¢…ë¥˜X
 
-    printf("±×¸°: %d, ·¯½º: %d\n", green, lus);
+    printf("ê·¸ë¦°: %d, ëŸ¬ìŠ¤: %d\n", green, lus);
     printf("weekend: %d\n", weekend);
     printf("buildings: %s\n", buildings);
     printf("buildings log: %d\n", ch);
 
 }
 int main() {
-    printf("½ÁÄ®º¿ µµ½ÃÀÇ Áı¼¼ °è»ê ÇÁ·Î±×·¥ÀÔ´Ï´Ù.\n");
-    //printf("ÇÁ·Î±×·¥À» Á¾·áÇÏ½Ã·Á¸é q¸¦ ¸®¼ÂÇÏ·Á¸é rÀ» ÀÔ·ÂÇÏ¼¼¿ä.\n");
+    printf("ìŠ·ì¹¼ë´‡ ë„ì‹œì˜ ì§‘ì„¸ ê³„ì‚° í”„ë¡œê·¸ë¨ì…ë‹ˆë‹¤.\n");
+    //printf("í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•˜ì‹œë ¤ë©´ që¥¼ ë¦¬ì…‹í•˜ë ¤ë©´ rì„ ì…ë ¥í•˜ì„¸ìš”.\n");
     loop();
     return 0;
 }
