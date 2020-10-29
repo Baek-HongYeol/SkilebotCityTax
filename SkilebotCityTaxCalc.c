@@ -167,11 +167,11 @@ void applyEffect(float* multiples, char* buildings) {
 
         }
     }
-    printf("multiples: ");
+    printf("multiples: [ ");
     for (int i = 0; i < 7; i++) {
-        printf("%f, ", multiples[i]);
+        printf("%.3f, ", multiples[i]);
     }
-    printf("\n");
+    printf("]\n");
     /*{('공터', 1, (1, 0, 0.5)),
         ('주택', 0), ('편의점', 2, (2, 2, 1, 3, 4), (3, 1, 2, 0.7)), ('학교', 2, (4, 1, 1, 3), (2, 1, 8, 0.5)),
         ('회사', 1, (3, 10, 1, 2, 5, 6, 7, 8, 10, 11, 12, 13, 2)), ('병원', 1, (0, 0, 1.5)),
@@ -249,11 +249,11 @@ void loop() {
     printf("그린: %d, 러스: %d\n", green, lus);
     printf("weekend: %d\n", weekend);
     printf("buildings: %s\n", buildings);
-    printf("multiples*unit: ");
+    printf("multiples*unit: [ ");
     for (int i = 0; i < 7; i++) {
-        printf("%f, ", multiples[i]);
+        printf("%.3f, ", multiples[i]);
     }
-    printf("\n");
+    printf("]\n");
     printf(" RESULT = %d\n", result);
 
 }
@@ -261,6 +261,8 @@ int main() {
     printf("슷칼봇 도시의 집세 계산 프로그램입니다.\n");
     //printf("프로그램을 종료하시려면 q를 리셋하려면 r을 입력하세요.\n");
     loop();
+    printf("종료하시려면 아무 키나 입력하세요. ");
+    getchar();
     return 0;
 }
 
