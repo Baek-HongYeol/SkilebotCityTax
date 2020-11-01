@@ -21,7 +21,7 @@ int price_input(char* str) {
     while (getchar() != '\n');
     return price;
 }
-/** commandInput - 문자를 입력받을 함수.
+/** commandInput - 문자를 입력받을 함수. 두 글자 이상이거나 알파벳 또는 '\n'이 아닌 다른 문자가 있을 경우 재 입력.
  * @return ch - 입력받은 문자.
  */
 char commandInput() {
@@ -44,6 +44,9 @@ char commandInput() {
     return tolower(command);
 }
 
+/** weekendInput - 주말에 대한 입력 함수
+ *  @return weekend - 0_평일, 1_토요일, 2_일요일
+ */
 int weekendInput() {
     char ch = 0;
     printf("산출일이 주말인지 입력하세요.(y/N) ");
@@ -63,6 +66,11 @@ int weekendInput() {
     return 0;
 }
 
+/**check_buildings - 건설한 building 목록을 검증해주는 함수.
+ * @return 1   - 정상일 때
+ * @return 0   - 잘못된 입력일 때
+ * @return -1  - str == NULL 일 때
+ */
 int check_buildings(char* str, int size) {
     int i = 0;
     if (str == NULL) return -1;
