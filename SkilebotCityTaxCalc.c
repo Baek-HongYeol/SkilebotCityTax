@@ -119,13 +119,13 @@ void applyEffect(float* multiples, char* buildings, int weekend) {
     char gontor[] = "1.10#0.5";                     //"1.10#0.5\0"; 
     char house[] = "0";
     char convenience[] = "2.221_3_#4\0.312_#0.7";
-        // 효과 개수, (place, 건물종류개수, 종류,.. , 효과), ...
+    char company[] = "1.310_1_2_5_6_7_8_10_11_12_13_#2";
+    char school[] = "2.411_#3\0.218_#0.5";
+    char* effects[] = { gontor, house, convenience, school };
         // num_ef. ('.',  place, num_build, build1_, build2_, ... , #coefficient'\0')
         // 효과 개수 == 0, nothing
         // place == 0, 전범위,
         // 건물종류개수 == 0, 모든 건물, 종류X
-    char school[] = "2.411_#3\0.218_#0.5";
-    char* effects[] = { gontor, house, convenience, school };
 
     for (int address = 0; address < strlen(buildings); address++) {
         char building = buildings[address];
