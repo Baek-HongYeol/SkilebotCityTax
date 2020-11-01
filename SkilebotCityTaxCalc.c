@@ -44,6 +44,25 @@ char commandInput() {
     return tolower(command);
 }
 
+int weekendInput() {
+    char ch = 0;
+    printf("산출일이 주말인지 입력하세요.(y/N) ");
+    ch = commandInput();
+    while (ch != 'y' && ch != 'n' && ch != '\n') {
+        ch = commandInput();
+    }
+    if (ch == 'y') {
+        printf("일요일이면 y, 토요일이면 n을 입력하세요.(y/N) ");
+        ch = commandInput();
+        while (ch != 'y' && ch != 'n' && ch != '\n') {
+            ch = commandInput();
+        }
+        if (ch == 'y') return 2;
+        else return 1;
+    }
+    return 0;
+}
+
 int check_buildings(char* str, int size) {
     int i = 0;
     if (str == NULL) return -1;
@@ -215,20 +234,8 @@ void loop() {
     green = price_input("그린건설");
     lus = price_input("러스관광");
 
-    printf("산출일이 주말인지 입력하세요.(y/N) ");
-    ch = commandInput();
-    while (ch != 'y' && ch != 'n' && ch != '\n') {
-        ch = commandInput();
-    }
-    if (ch == 'y') {
-        printf("일요일이면 y, 토요일이면 n을 입력하세요.(y/N) ");
-        ch = commandInput();
-        while (ch != 'y' && ch != 'n' && ch != '\n') {
-            ch = commandInput();
-        }
-        if (ch == 'y') weekend = 2;
-        else weekend = 1;
-    }
+    weekend = weekendInput();
+    
     printf("공터=x, 주택=a, 편의점=b, 학교=c, 회사=d\n");
     printf("병원=e, 은행=f, 백화점-g, 호텔=h, 카지노=i\n");
     printf("항구=j, 경기장=k, 교회=l, 공장=m\n");
