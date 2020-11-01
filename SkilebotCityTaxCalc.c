@@ -118,7 +118,12 @@ void applyEffect(float* multiples, char* buildings, int weekend) {
     char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL };
     char gontor[] = "1.10#0.5";                     //"1.10#0.5\0"; 
     char house[] = "0";
-    char convenience[] = "2.221_3_#4\0.312_#0.7";   // num_ef. ('.',  place, num_build, build1_, build2_, ... , #coefficient'\0')
+    char convenience[] = "2.221_3_#4\0.312_#0.7";
+        // 효과 개수, (place, 건물종류개수, 종류,.. , 효과), ...
+        // num_ef. ('.',  place, num_build, build1_, build2_, ... , #coefficient'\0')
+        // 효과 개수 == 0, nothing
+        // place == 0, 전범위,
+        // 건물종류개수 == 0, 모든 건물, 종류X
     char school[] = "2.411_#3\0.218_#0.5";
     char* effects[] = { gontor, house, convenience, school };
 
@@ -210,10 +215,6 @@ void applyEffect(float* multiples, char* buildings, int weekend) {
         ('호텔', 2, (0, 9, 2, 4, 5, 6, 7, 10, 11, 12, 13, 2), (0, 1, 1, 0.5)),
         ('카지노', 3, (2, 1, 1, 0.5), (0, 1, 9, 0.5), (1, 1, 8, 2)), ('항구', 1, (0, 3, 8, 9, 10, 3)),
         ('경기장', 1, (2, 0, 0.2)), ('교회', 1, [2, 2, 1, 4, 1.5]), ('공장', 1, (3, 0, 0)))*/
-        // ('건물이름', 효과 개수, (place, 건물종류개수, 종류,.. , 효과)..)
-        // 효과 개수 == 0, nothing
-        // place == 0, 전범위,
-        // 건물종류개수 == 0, 모든 건물, 종류X
 }
 
 void calculateTax(char* buildings, float* multiples) {
