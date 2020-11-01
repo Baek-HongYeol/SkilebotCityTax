@@ -65,7 +65,7 @@ int check_buildings(char* str, int size) {
  */
 int buildingInput(char* str, int size) {
     char ch = 0;
-    int i = 0, overcount=0;
+    int i = 0, overcount = 0;
     if (str == NULL) return -1;
     while ((i < size - 1) && ((ch = getchar()) != '\n')) {  // 7자리 완료 또는 그 전에 입력이 끝난 경우 종료.
         if (isalpha(ch)) {
@@ -88,7 +88,7 @@ int buildingInput(char* str, int size) {
 
 
 void applyEffect(float* multiples, char* buildings, int weekend) {
-    char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL};
+    char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL };
     char gontor[] = "1.10#0.5";                     //"1.10#0.5\0"; 
     char house[] = "0";
     char convenience[] = "2.221_3_#4\0.312_#0.7";   // num_ef. ('.',  place, num_build, build1_, build2_, ... , #coefficient'\0')
@@ -155,7 +155,7 @@ void applyEffect(float* multiples, char* buildings, int weekend) {
                 for (int address1 = 0; address1 < strlen(buildings); address1++) {  // 각 효과를 buildings 문자열을 탐색하여 multiples에 적용
                     if (address1 == address) continue;
 
-                    if (place == 0 || abs(address1 - address) <= place) { 
+                    if (place == 0 || abs(address1 - address) <= place) {
                         char* neighbor = strchr(b_arr, buildings[address1]);   // b의 주소를 반환, 없으면 0.
                         int neighbor_type = neighbor - b_arr;
                         if (neighbor_type < 8 && (first_efbuild & 1 << neighbor_type)) {
@@ -192,7 +192,7 @@ void applyEffect(float* multiples, char* buildings, int weekend) {
 void calculateTax(char* buildings, float* multiples) {
     char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL };
     int building_tax[] = { 0, 1, 2, 4, 6, 10, 20, 25, 30, 50, 15, 15, 0, 0 };
-    for (int address = 0; address < strlen(buildings); address++) {  
+    for (int address = 0; address < strlen(buildings); address++) {
         char* neighbor = strchr(b_arr, buildings[address]);   // b의 주소를 반환, 없으면 0.
         int neighbor_type = neighbor - b_arr;
         multiples[address] *= building_tax[neighbor_type];
@@ -235,7 +235,7 @@ void loop() {
     printf("배열할 건물을 띄어쓰기 없이 7자리 적으세요: ");
 
     char buildings[8];
-    ch = buildingInput(buildings, sizeof(buildings)/sizeof(char));
+    ch = buildingInput(buildings, sizeof(buildings) / sizeof(char));
     while (!ch) {
         printf("잘못 입력하셨습니다.\n");
         printf("배열할 건물을 띄어쓰기 없이 7자리 적으세요: ");
@@ -243,7 +243,7 @@ void loop() {
     }
 
     float multiples[7] = { 1, 1, 1, 1, 1, 1, 1 };
-    
+
     applyEffect(multiples, buildings);
     calculateTax(buildings, multiples);
 
@@ -262,10 +262,14 @@ void loop() {
 }
 int main() {
     printf("슷칼봇 도시의 집세 계산 프로그램입니다.\n");
-    //printf("프로그램을 종료하시려면 q를 리셋하려면 r을 입력하세요.\n");
-    loop();
-    printf("종료하시려면 아무 키나 입력하세요. ");
-    getchar();
+    char ch = 0;
+    while (ch != 'q') {
+        loop();
+        printf("종료하시려면 q를, 계속하려면 아무 키나 입력하세요. ");
+        ch = getchar();
+        while (ch != '\n' && getchar() != '\n');
+    }
+
     return 0;
 }
 
