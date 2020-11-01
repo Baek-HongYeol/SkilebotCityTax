@@ -87,7 +87,7 @@ int buildingInput(char* str, int size) {
 }
 
 
-void applyEffect(float* multiples, char* buildings) {
+void applyEffect(float* multiples, char* buildings, int weekend) {
     char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL};
     char gontor[] = "1.10#0.5";                     //"1.10#0.5\0"; 
     char house[] = "0";
@@ -144,6 +144,9 @@ void applyEffect(float* multiples, char* buildings) {
                 }
                 k++;
                 double coefficient = atof(&effect[k]);  // # 이후 '\0'까지 실수로 변환
+
+                if (weekend == 2 && type_num == 12) coefficient = 5;                // 일요일 교회 효과 적용
+                else if (weekend == 1 && type_num == 11) multiples[address] *= 4;   // 토요일 경기장 효과 적용
                 i = k + strlen(&effect[k]) + 2;       // # 이후 다음 effect로 이동
 
                 if (first_efbuild < 1 && second_efbuild < 1) {
@@ -254,7 +257,7 @@ void loop() {
         printf("%.3f, ", multiples[i]);
     }
     printf("]\n");
-    printf(" RESULT = %d\n", result);
+    printf("RESULT = %d\n", result);
 
 }
 int main() {
