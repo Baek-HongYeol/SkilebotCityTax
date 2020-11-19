@@ -5,6 +5,9 @@
 
 int alphatoint(char a);
 double alphatofloat(const char* cast_str);
+int getTypeofBuilding(char building);
+void print_commify(int num);
+void print_floatArray(float* arr);
 
 char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL };
 
@@ -151,19 +154,18 @@ int applyEffects(float* multiples, char* buildings, int weekend) {
 
     for (int address = 0; address < strlen(buildings); address++) {
         char building = buildings[address];
-        char* b_idx = strchr(b_arr, building);   // b의 주소를 반환, 없으면 0.
-        int type_num = b_idx - b_arr;
+        int type_num = getTypeofBuilding(building);
         if (type_num >= sizeof(effects) / sizeof(char*)) {
             printf("\n----------------------------------\n");
-            printf("건물 효과 설정 오류로 프로그램을 종료합니다.");
-            return;
+            printf("building effect 설정 오류로 프로그램을 종료합니다.");
+            return -1;
         }
         char* effect = effects[type_num];
         int ef_size = ef_sizes[type_num];
 
-        if (!b_idx) {   // idx
+        if (type_num<0) {   // idx
             printf("Error not permitted character in applyEffect()\n");
-            return;
+            return -1;
         }
         {
             int num_ef = alphatoint(effect[0]);
@@ -223,8 +225,8 @@ int applyEffects(float* multiples, char* buildings, int weekend) {
                     if (address1 == address) continue;
 
                     if (place == 0 || abs(address1 - address) <= place) {
-                        char* neighbor = strchr(b_arr, buildings[address1]);   // b의 주소를 반환, 없으면 0.
-                        int neighbor_type = neighbor - b_arr;
+                        int neighbor_type = getTypeofBuilding(buildings[address1]);
+                        if (neighbor_type < 0) return -1;
                         if (neighbor_type < 8 && (first_efbuild & 1 << neighbor_type)) {
                             multiples[address1] *= coefficient;
                         }
@@ -241,24 +243,19 @@ int applyEffects(float* multiples, char* buildings, int weekend) {
 //            printf("]\n");
         }
     }
-    printf("multiples: [ ");
-    for (int i = 0; i < 7; i++) {
-        printf("%.3f, ", multiples[i]);
-    }
-    printf("]\n");
     return 0;
 }
 
 float calculateTax(char* buildings, float* multiples) {
     int building_tax[] = { 0, 1, 2, 4, 6, 10, 20, 25, 30, 50, 15, 15, 0, 0 };
-    float sum = 0;
+    float stocks_total= 0;
     for (int address = 0; address < strlen(buildings); address++) {
-        char* neighbor = strchr(b_arr, buildings[address]);   // building의 주소를 반환, 없으면 0.
-        int neighbor_type = neighbor - b_arr;
+        int neighbor_type = getTypeofBuilding(buildings[address]);
+        if (neighbor_type < 0) return -1;
         multiples[address] *= building_tax[neighbor_type];
-        sum += multiples[address];
+        stocks_total += multiples[address];
     }
-    return sum;
+    return stocks_total;
 }
 
 int sumTaxes(char* buildings, float* multiples, int green, int lus) {
@@ -291,30 +288,35 @@ void loop() {
         printf("배열할 건물을 띄어쓰기 없이 7자리 적으세요: ");
         ch = buildingInput(buildings, sizeof(buildings) / sizeof(char));
     }
-
+    printf("===================================================\n");
     float multiples[7] = { 1, 1, 1, 1, 1, 1, 1 };
     if(applyEffects(multiples, buildings, weekend)<0) return;
 
-    float stocks = calculateTax(buildings, multiples);
-    int result = sumTaxes(buildings, multiples, green, lus);
-
     printf("\n");
     printf("그린: %d슷, 러스: %d슷\n", green, lus);
-    printf("weekend: %d\n", weekend);
+    printf("weekend: %s\n", (weekend==1) ? "Saturday" : (weekend==0) ? "X" : "Sunday" );
+    printf("적용된 효과: ");
+    print_floatArray(multiples);
+
+    float stocks = calculateTax(buildings, multiples);
+    if (stocks < 0) return;
+    int result = sumTaxes(buildings, multiples, green, lus);
+
     printf("buildings: %s\n", buildings);
-    printf("multiples*unit: [ ");
-    for (int i = 0; i < 7; i++) {
-        printf("%.3f, ", multiples[i]);
-    }
-    printf("]\n");
-    printf("Stocks Sum : %.4f\n", stocks);
-    printf("RESULT = %d\n", result);
+    printf("Multiples*Stocks: ");
+    print_floatArray(multiples);
+    if (stocks == (int)stocks) printf("Stocks Total : %.1f주\n", stocks);
+    else printf("Stocks Total : %.4f주\n", stocks);
+    printf("RESULT = ");
+    print_commify(result);
+    printf("슷\n");
     printf("\n");
 }
 int main() {
     printf("슷칼봇 도시의 집세 계산 프로그램입니다.\n");
     char ch = 0;
     while (ch != 'q') {
+        printf("\n");
         loop();
         printf("종료하시려면 q를, 계속하려면 아무 키나 입력하세요. ");
         ch = getchar();
@@ -322,6 +324,34 @@ int main() {
     }
 
     return 0;
+}
+
+int getTypeofBuilding(char building) {      // building의 type반환 , 없으면 -1
+    char* neighbor = strchr(b_arr, building);
+    if (neighbor) return neighbor - b_arr;
+    else return -1;
+}
+
+void print_floatArray(float* arr) {
+    printf("[ ");
+    for (int i = 0; i < 7; i++) {
+        if (arr[i] == (int)arr[i]) printf("%.1f, ", arr[i]);
+        else printf("%.3f, ", arr[i]);
+    }
+    printf("]\n");
+}
+
+void print_commify(int num) {
+    char arr[20];
+    itoa(num, arr, 10);
+    int len = strlen(arr);
+    int n = 0;
+    for (int i = 0; i < len; i++) {
+        if ((len - i) % 3 == 0 && i != 0){
+            printf(",");
+        }
+        printf("%c", arr[i]);
+    }
 }
 
 int alphatoint(char a) {
