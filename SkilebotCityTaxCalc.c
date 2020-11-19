@@ -6,6 +6,8 @@
 int alphatoint(char a);
 double alphatofloat(const char* cast_str);
 
+char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL };
+
 int price_input(char* str) {
     int price = 0;
     int errnum = 0;
@@ -114,8 +116,9 @@ int buildingInput(char* str, int size) {
 }
 
 
-void applyEffect(float* multiples, char* buildings, int weekend) {
-    char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL };
+int applyEffects(float* multiples, char* buildings, int weekend) {
+    if (multiples == NULL) return -1;
+    if (buildings == NULL) return -1;
     char gontor[] = "1/10.#0.5"; 
     char house[] = "0";
     char convenience[] = "2/22.1_3_#4\0/31.2_#0.7";
@@ -164,11 +167,11 @@ void applyEffect(float* multiples, char* buildings, int weekend) {
         }
         {
             int num_ef = alphatoint(effect[0]);
-            int k, i = 2;
-            for (int j = 0; j < num_ef; j++) {      // 효과 개수만큼 반복
+            int i = 2;
+            for (int j = 0; j < num_ef; j++) {          // 효과 개수만큼 반복
                 unsigned char first_efbuild = 0;        // b0 0 0 0  0 0 0 0 
                 unsigned char second_efbuild = 0;
-                int place = alphatoint(effect[i]);  // i is on the index of place, next of '/'.
+                int place = alphatoint(effect[i]);      // i is on the index of place, next of '/'.
                 int num_build = -1;
                 for (i = i + 1; effect[i] != '.'; i++) { // 효과를 끼치는 건물 개수 저장. Until i is on the index of '.'
                     if (num_build == -1)
@@ -181,13 +184,13 @@ void applyEffect(float* multiples, char* buildings, int weekend) {
                 if (num_build == 0) {
                     first_efbuild = 255;
                     second_efbuild = 63;
-                    k = i + 1;              // move k to index of '#'. effect = "/10.#0.7\0"
+                    i++;                    // move i to index of '#'. case of effect = "/10.#0.7\0"
                 }
                 else {
                     int n = 0;
-                    for (k = i + 1; effect[k] != '#'; k++) {
-                        if (effect[k] == '_') {
-                            if (n != 0) {
+                    for (i = i + 1; effect[i] != '#'; i++) {    // move i to index of buildings Until '#'
+                        if (effect[i] == '_') {
+                            if (n != 0) {   
                                 if (n < 8) {
                                     first_efbuild += 1 << n;
                                 }
@@ -199,19 +202,19 @@ void applyEffect(float* multiples, char* buildings, int weekend) {
                             continue;
                         }
                         else if (n == 0)
-                            n = alphatoint(effect[k]);
+                            n = alphatoint(effect[i]);
                         else {
                             n *= 10;
-                            n += alphatoint(effect[k]);
+                            n += alphatoint(effect[i]);
                         }
                     }
                 }
-                k++;
-                float coefficient = atof(&effect[k]);  // # 이후 '\0'까지 실수로 변환
+                i++;        // move i to coefficient.
+                float coefficient = atof(&effect[i]);  // # 이후 '\0'까지 실수로 변환
 
                 if (weekend == 2 && type_num == 12) coefficient = 5;                // 일요일 교회 효과 적용
                 else if (weekend == 1 && type_num == 11) multiples[address] *= 4;   // 토요일 경기장 효과 적용
-                i = k + strlen(&effect[k]) + 2;       // # 이후 다음 effect로 이동
+                i = i + strlen(&effect[i]) + 2;       // coefficient 이후 다음 effect로 이동
 
                 if (first_efbuild < 1 && second_efbuild < 1) {
                     continue;
@@ -243,10 +246,10 @@ void applyEffect(float* multiples, char* buildings, int weekend) {
         printf("%.3f, ", multiples[i]);
     }
     printf("]\n");
+    return 0;
 }
 
 float calculateTax(char* buildings, float* multiples) {
-    char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL };
     int building_tax[] = { 0, 1, 2, 4, 6, 10, 20, 25, 30, 50, 15, 15, 0, 0 };
     float sum = 0;
     for (int address = 0; address < strlen(buildings); address++) {
@@ -290,14 +293,13 @@ void loop() {
     }
 
     float multiples[7] = { 1, 1, 1, 1, 1, 1, 1 };
+    if(applyEffects(multiples, buildings, weekend)<0) return;
 
-    applyEffect(multiples, buildings, weekend);
     float stocks = calculateTax(buildings, multiples);
-
     int result = sumTaxes(buildings, multiples, green, lus);
 
     printf("\n");
-    printf("그린: %d, 러스: %d\n", green, lus);
+    printf("그린: %d슷, 러스: %d슷\n", green, lus);
     printf("weekend: %d\n", weekend);
     printf("buildings: %s\n", buildings);
     printf("multiples*unit: [ ");
@@ -307,7 +309,7 @@ void loop() {
     printf("]\n");
     printf("Stocks Sum : %.4f\n", stocks);
     printf("RESULT = %d\n", result);
-
+    printf("\n");
 }
 int main() {
     printf("슷칼봇 도시의 집세 계산 프로그램입니다.\n");
