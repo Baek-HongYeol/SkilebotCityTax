@@ -3,11 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_BUILDING 7
+
 int alphatoint(char a);
 double alphatofloat(const char* cast_str);
 int getTypeofBuilding(char building);
 void print_commify(int num);
-void print_floatArray(float* arr);
+void printFloatArray(float* arr);
 
 char b_arr[15] = { 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', NULL };
 
@@ -27,22 +29,21 @@ int price_input(char* str) {
     return price;
 }
 /** commandInput - 문자를 입력받을 함수. 두 글자 이상이거나 알파벳 또는 '\n'이 아닌 다른 문자가 있을 경우 재 입력.
- * @return ch - 입력받은 문자.
- */
+ * @return ch - 입력받은 문자. */
 char commandInput() {
     char ch = 0;
     int i = 0;
-    int flag = 1;
+    int isAlphabet = 1;
     char command = 0;
     while ((ch = getchar()) != '\n') {
         if (!isalpha(ch)) {
-            flag = 0;
+            isAlphabet = 0;
         }
         command = ch;
         i++;
     }
     if (!i) command = ch;
-    if (i > 1 || !flag) {
+    if (i > 1 || !isAlphabet) {
         printf("잘못 입력하셨습니다. \n");
         return commandInput();
     }
@@ -50,8 +51,7 @@ char commandInput() {
 }
 
 /** weekendInput - 주말에 대한 입력 함수
- *  @return weekend - 0_평일, 1_토요일, 2_일요일
- */
+ *  @return weekend - 0_평일, 1_토요일, 2_일요일 */
 int weekendInput() {
     char ch = 0;
     printf("산출일이 주말인지 입력하세요.(y/N) ");
@@ -74,14 +74,13 @@ int weekendInput() {
 /**check_buildings - 건설한 building 목록을 검증해주는 함수.
  * @return 1   - 정상일 때
  * @return 0   - 잘못된 입력일 때
- * @return -1  - str == NULL 일 때
- */
+ * @return -1  - str == NULL 일 때 */
 int check_buildings(char* str, int size) {
     int i = 0;
     if (str == NULL) return -1;
     for (i = 0; str[i] != '\0' && i < size - 1; i++) {
         char c = str[i];
-        if (c < 97 || (c > 109 && c != 120)) return 0;
+        if (c < 'a' || (c > 'm' && c != 'x')) return 0;
 
         else if (c == 106 && (i != 0 && i != 6)) {
             printf("항구는 맨 끝 칸에 배치하세요. \n");
@@ -94,7 +93,9 @@ int check_buildings(char* str, int size) {
 /** buildingInput - 빌딩의 배열을 입력받을 함수
  * @param str - 문자열 입력시 전달받을 char형 배열 주소
  * @param size - str의 size
- */
+ * @return 1   - 정상일 때
+ * @return 0   - 잘못된 입력일 때
+ * @return -1  - str == NULL 일 때 */
 int buildingInput(char* str, int size) {
     char ch = 0;
     int i = 0, overcount = 0;
@@ -118,10 +119,24 @@ int buildingInput(char* str, int size) {
     return check_buildings(str, size);
 }
 
-
+/** Effects Structure - (ex: "/41.1_#3\0" is an effect of school)
+* num_ef / place num_build . build1_ build2_ ... #coefficient'\0')
+* 효과 개수 == 0, nothing
+* place == 0, 전범위,  (place: 0~7)
+* 건물종류개수 == 0, 모든 건물, 종류X  (num_build: 0~MAX_BUILDING)
+* { ('공터', 1, (1, 0, 0.5)),
+*    ('주택', 0), ('편의점', 2, (2, 2, 1, 3, 4), (3, 1, 2, 0.7)), ('학교', 2, (4, 1, 1, 3), (2, 1, 8, 0.5)),
+*    ('회사', 1, (3, 10, 1, 2, 5, 6, 7, 8, 10, 11, 12, 13, 2)), ('병원', 1, (0, 0, 1.5)),
+*    ('은행', 1, (1, 1, 5, 5)),
+*    ('백화점', 2, (1, 0, 3.5), (0, 1, 2, 0)),
+*    ('호텔', 2, (0, 9, 2, 4, 5, 6, 7, 10, 11, 12, 13, 2), (0, 1, 1, 0.5)),
+*    ('카지노', 3, (2, 1, 1, 0.5), (0, 1, 9, 0.5), (1, 1, 8, 2)), ('항구', 1, (0, 3, 8, 9, 11, 3)),
+*    ('경기장', 1, (2, 0, 0.2)), ('교회', 1, [2, 2, 1, 4, 1.5]), ('공장', 1, (3, 0, 0)) }  
+*/
 int applyEffects(float* multiples, char* buildings, int weekend) {
     if (multiples == NULL) return -1;
     if (buildings == NULL) return -1;
+
     char gontor[] = "1/10.#0.5"; 
     char house[] = "0";
     char convenience[] = "2/22.1_3_#4\0/31.2_#0.7";
@@ -137,20 +152,10 @@ int applyEffects(float* multiples, char* buildings, int weekend) {
     char church[] = "1/22.1_4_#1.5";
     char factory[] = "1/30.#0";
     char* effects[] = { gontor, house, convenience, school, company, hospital, bank, mart, hotel, casino, port, stadium, church, factory };
-    // num_ef / ('.',  place, num_build, build1_, build2_, ... , #coefficient'\0')
-    // 효과 개수 == 0, nothing
-    // place == 0, 전범위,
-    // 건물종류개수 == 0, 모든 건물, 종류X
-    /*{('공터', 1, (1, 0, 0.5)),
-        ('주택', 0), ('편의점', 2, (2, 2, 1, 3, 4), (3, 1, 2, 0.7)), ('학교', 2, (4, 1, 1, 3), (2, 1, 8, 0.5)),
-        ('회사', 1, (3, 10, 1, 2, 5, 6, 7, 8, 10, 11, 12, 13, 2)), ('병원', 1, (0, 0, 1.5)),
-        ('은행', 1, (1, 1, 5, 5)),
-        ('백화점', 2, (1, 0, 3.5), (0, 1, 2, 0)),
-        ('호텔', 2, (0, 9, 2, 4, 5, 6, 7, 10, 11, 12, 13, 2), (0, 1, 1, 0.5)),
-        ('카지노', 3, (2, 1, 1, 0.5), (0, 1, 9, 0.5), (1, 1, 8, 2)), ('항구', 1, (0, 3, 8, 9, 11, 3)),
-        ('경기장', 1, (2, 0, 0.2)), ('교회', 1, [2, 2, 1, 4, 1.5]), ('공장', 1, (3, 0, 0)))*/
 
-    int ef_sizes[] = {10, 2, 23, 21, 33, 10, 10, 19, 41, 32, 15, 10, 14, 8};
+    int ef_sizes[] = {sizeof(gontor), sizeof(house), sizeof(convenience), sizeof(school), sizeof(company), \
+                    sizeof(hospital), sizeof(bank), sizeof(mart), sizeof(hotel), sizeof(casino), \
+                    sizeof(port), sizeof(stadium), sizeof(church), sizeof(factory)};
 
     for (int address = 0; address < strlen(buildings); address++) {
         char building = buildings[address];
@@ -164,7 +169,7 @@ int applyEffects(float* multiples, char* buildings, int weekend) {
         int ef_size = ef_sizes[type_num];
 
         if (type_num<0) {   // idx
-            printf("Error not permitted character in applyEffect()\n");
+            printf("Error: not permitted character in applyEffect()\n");
             return -1;
         }
         {
@@ -236,11 +241,6 @@ int applyEffects(float* multiples, char* buildings, int weekend) {
                     }
                 }
             }
-//            printf("multiples%d: [ ", address);
-//            for (int i = 0; i < 7; i++) {
-//                printf("%.3f, ", multiples[i]);
-//            }
-//            printf("]\n");
         }
     }
     return 0;
@@ -260,7 +260,7 @@ float calculateTax(char* buildings, float* multiples) {
 
 int sumTaxes(char* buildings, float* multiples, int green, int lus) {
     float sum = 0;
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < MAX_BUILDING; i++) {
         if (buildings[i] == 'i') sum += multiples[i] * lus;
         else sum += multiples[i] * green;
     }
@@ -271,40 +271,51 @@ void loop() {
     int green = 0, lus = 0;
     int weekend = 0;    //기본값은 평일, 1-토요일, 2-일요일
     char ch;
+
+    // 주식 가격 입력
     green = price_input("그린건설");
     lus = price_input("러스관광");
-
+    
+    // 주말 입력
     weekend = weekendInput();
     
+    // 도시 건물 입력
     printf("공터=x, 주택=a, 편의점=b, 학교=c, 회사=d\n");
     printf("병원=e, 은행=f, 백화점=g, 호텔=h, 카지노=i\n");
     printf("항구=j, 경기장=k, 교회=l, 공장=m\n");
     printf("배열할 건물을 띄어쓰기 없이 7자리 적으세요: ");
-
-    char buildings[8];
+    char buildings[MAX_BUILDING + 1];
     ch = buildingInput(buildings, sizeof(buildings) / sizeof(char));
+    if (ch == -1) return;
+
     while (!ch) {
         printf("잘못 입력하셨습니다.\n");
         printf("배열할 건물을 띄어쓰기 없이 7자리 적으세요: ");
         ch = buildingInput(buildings, sizeof(buildings) / sizeof(char));
     }
-    printf("===================================================\n");
-    float multiples[7] = { 1, 1, 1, 1, 1, 1, 1 };
-    if(applyEffects(multiples, buildings, weekend)<0) return;
 
+    printf("===================================================\n");
+
+    // The effects take effect into this array.
+    float multiples[MAX_BUILDING] = { 1, 1, 1, 1, 1, 1, 1 };
+    if(applyEffects(multiples, buildings, weekend)<0) return;
+    
+    // print effects
     printf("\n");
     printf("그린: %d슷, 러스: %d슷\n", green, lus);
-    printf("weekend: %s\n", (weekend==1) ? "Saturday" : (weekend==0) ? "X" : "Sunday" );
+    printf("weekend: %s\n", (weekend==0) ? "X" : (weekend==1) ? "Saturday" : "Sunday" );
     printf("적용된 효과: ");
-    print_floatArray(multiples);
+    printFloatArray(multiples);
+    printf("buildings: %s\n", buildings);
 
+    // calculate Tax
     float stocks = calculateTax(buildings, multiples);
     if (stocks < 0) return;
     int result = sumTaxes(buildings, multiples, green, lus);
 
-    printf("buildings: %s\n", buildings);
-    printf("Multiples*Stocks: ");
-    print_floatArray(multiples);
+    // print results
+    printf("Effects*Stocks: ");
+    printFloatArray(multiples);
     if (stocks == (int)stocks) printf("Stocks Total : %.1f주\n", stocks);
     else printf("Stocks Total : %.4f주\n", stocks);
     printf("RESULT = ");
@@ -332,9 +343,9 @@ int getTypeofBuilding(char building) {      // building의 type반환 , 없으�
     else return -1;
 }
 
-void print_floatArray(float* arr) {
+void printFloatArray(float* arr) {
     printf("[ ");
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < MAX_BUILDING; i++) {
         if (arr[i] == (int)arr[i]) printf("%.1f, ", arr[i]);
         else printf("%.3f, ", arr[i]);
     }
